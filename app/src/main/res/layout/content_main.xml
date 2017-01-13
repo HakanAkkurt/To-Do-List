@@ -12,6 +12,40 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/todos" />
+        android:id="@+id/todos"
+        android:layout_below="@+id/create" />
+
+    <Button
+        android:text="Create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/create" />
+
+    <Button
+        android:text="ClearAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/create"
+        android:layout_marginStart="6dp"
+        android:id="@+id/clearAll" />
+
+    <Button
+        android:text="ClearFirst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/clearFirst"
+        android:layout_marginStart="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/clearAll" />
+
+    <Button
+        android:text="UpdateFirst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/clearFirst"
+        android:layout_marginStart="7dp"
+        android:id="@+id/updateFirst"
+        android:layout_above="@+id/todos" />
 
 </RelativeLayout>

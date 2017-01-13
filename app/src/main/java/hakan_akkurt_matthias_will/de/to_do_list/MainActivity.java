@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import hakan_akkurt_matthias_will.de.to_do_list.adapter.listview.ToDoOverviewListAdapter;
+import hakan_akkurt_matthias_will.de.to_do_list.database.TodoDatabase;
 import hakan_akkurt_matthias_will.de.to_do_list.model.ToDo;
 
 import static hakan_akkurt_matthias_will.de.to_do_list.R.id.todos;
@@ -29,7 +31,9 @@ import static hakan_akkurt_matthias_will.de.to_do_list.R.id.todos;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    private ListView listView;
+    private List<ToDo> dataSource;
+    private ToDoOverviewListAdapter adapter;
 
 
 
@@ -43,15 +47,21 @@ public class MainActivity extends AppCompatActivity
         //eigene Codes
 
 
-        ListView listView = (ListView) findViewById(R.id.todos);
+        this.listView = (ListView) findViewById(R.id.todos);
 
-        List<ToDo> dataSource = new ArrayList<>();
-        dataSource.add(new ToDo("einkaufen"));
-        dataSource.add(new ToDo("was geht", Calendar.getInstance()));
+        Button create = (Button) findViewById(R.id.create);
+        Button clearAll = (Button) findViewById(R.id.clearAll);
+        Button clearFirst = (Button) findViewById(R.id.clearFirst);
+        Button updateFirst = (Button) findViewById(R.id.updateFirst);
 
 
-        listView.setAdapter(new ToDoOverviewListAdapter(this, dataSource));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
+        /*dataSource.add(new ToDo("einkaufen"));
+        dataSource.add(new ToDo("was geht", Calendar.getInstance()));*/
+
+        this.adapter = new ToDoOverviewListAdapter(this, dataSource);
+        this.listView.setAdapter(adapter);
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, final View view, int position, long id) {
                 Object element = adapterView.getAdapter().getItem(position);
@@ -60,6 +70,51 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        if(create != null){
+            create.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+
+                    database.createToDO(new ToDo("Einkaufen"));
+                    database.createToDO(new ToDo("was geht?", Calendar.getInstance()));
+
+                    refreshListView();
+
+                }
+            });
+        }
+
+        if(clearAll != null){
+            clearAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+
+                }
+            });
+        }
+
+        if(clearFirst != null){
+            clearFirst.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+
+                }
+            });
+        }
+
+        if(updateFirst != null){
+            updateFirst.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+
+                }
+            });
+        }
+
+
+
 
 
         //bis hier
@@ -88,6 +143,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void refreshListView(){
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
+        adapter.notifyDataSetChanged();
+
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
