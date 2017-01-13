@@ -43,8 +43,8 @@ public class TodoDatabase extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
-        String createQuery = "CREATE TABLE " + TABLE_NAME + "(" + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                + NAME_COLUMN + "TEXT NOT NULL, " + DUEDATE_COLUMN + " INTEGER DEFAULT NULL)";
+        String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, "
+                + NAME_COLUMN + " TEXT NOT NULL, " + DUEDATE_COLUMN + " INTEGER DEFAULT NULL)";
 
         sqLiteDatabase.execSQL(createQuery);
 

@@ -21,6 +21,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import hakan_akkurt_matthias_will.de.to_do_list.adapter.listview.ToDoOverviewListAdapter;
 import hakan_akkurt_matthias_will.de.to_do_list.database.TodoDatabase;
@@ -56,8 +57,6 @@ public class MainActivity extends AppCompatActivity
 
 
         this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
-        /*dataSource.add(new ToDo("einkaufen"));
-        dataSource.add(new ToDo("was geht", Calendar.getInstance()));*/
 
         this.adapter = new ToDoOverviewListAdapter(this, dataSource);
         this.listView.setAdapter(adapter);
@@ -90,7 +89,9 @@ public class MainActivity extends AppCompatActivity
             clearAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-
+                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+                    database.deleteAllToDos();
+                    refreshListView();
                 }
             });
         }
@@ -99,6 +100,11 @@ public class MainActivity extends AppCompatActivity
             clearFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
+                    if(dataSource.size() > 0){
+                        TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+                        database.deleteToDo(dataSource.get(0));
+                        refreshListView();
+                    }
 
                 }
             });
@@ -108,6 +114,15 @@ public class MainActivity extends AppCompatActivity
             updateFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
+                    if(dataSource.size() > 0){
+                        TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+                        Random r = new Random();
+                        dataSource.get(0).setName(String.valueOf(r.nextInt()));
+                        database.updateToDo(dataSource.get(0));
+                        refreshListView();
+
+
+                    }
 
                 }
             });
