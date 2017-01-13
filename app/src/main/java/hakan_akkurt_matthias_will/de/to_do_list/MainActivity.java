@@ -18,7 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import hakan_akkurt_matthias_will.de.to_do_list.adapter.listview.ToDoOverviewListAdapter;
+import hakan_akkurt_matthias_will.de.to_do_list.model.ToDo;
 
 import static hakan_akkurt_matthias_will.de.to_do_list.R.id.todos;
 
@@ -41,11 +45,12 @@ public class MainActivity extends AppCompatActivity
 
         ListView listView = (ListView) findViewById(R.id.todos);
 
-        List<String> dataSource = new ArrayList<>();
-        dataSource.add("Test");
-        dataSource.add("Test2");
+        List<ToDo> dataSource = new ArrayList<>();
+        dataSource.add(new ToDo("einkaufen"));
+        dataSource.add(new ToDo("was geht", Calendar.getInstance()));
 
-        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataSource));
+
+        listView.setAdapter(new ToDoOverviewListAdapter(this, dataSource));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, final View view, int position, long id) {
