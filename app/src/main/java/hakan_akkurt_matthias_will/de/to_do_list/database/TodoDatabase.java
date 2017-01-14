@@ -23,9 +23,9 @@ public class TodoDatabase extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     private static final String TABLE_NAME = "todos";
 
-    private static final String ID_COLUMN = "ID";
-    private static final String NAME_COLUMN = "name";
-    private static final String DUEDATE_COLUMN = "dueDate";
+    public static final String ID_COLUMN = "ID";
+    public static final String NAME_COLUMN = "name";
+    public static final String DUEDATE_COLUMN = "dueDate";
 
 
 
@@ -146,5 +146,18 @@ public class TodoDatabase extends SQLiteOpenHelper {
         database.execSQL("DELETE FROM " + TABLE_NAME);
         database.close();
 
+    }
+
+    public Cursor getAllTodosAsCursor(){
+        return this.getReadableDatabase().rawQuery("SELECT "+ ID_COLUMN + " as _id, " + NAME_COLUMN + "," + DUEDATE_COLUMN + " FROM " + TABLE_NAME, null);
+    }
+
+    public ToDo getFirstTodo(){
+        List<ToDo> todos = this.readAllToDos();
+
+        if(todos.size() > 0) {
+            return todos.get(0);
+        }
+        return null;
     }
 }

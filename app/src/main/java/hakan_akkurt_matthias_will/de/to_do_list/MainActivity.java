@@ -33,11 +33,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView listView;
-    private List<ToDo> dataSource;
     private ToDoOverviewListAdapter adapter;
-
-
-
 
 
     @Override
@@ -56,9 +52,8 @@ public class MainActivity extends AppCompatActivity
         Button updateFirst = (Button) findViewById(R.id.updateFirst);
 
 
-        this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
 
-        this.adapter = new ToDoOverviewListAdapter(this, dataSource);
+        this.adapter = new ToDoOverviewListAdapter(this, TodoDatabase.getInstance(this).getAllTodosAsCursor());
         this.listView.setAdapter(adapter);
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -100,9 +95,10 @@ public class MainActivity extends AppCompatActivity
             clearFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    if(dataSource.size() > 0){
-                        TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
-                        database.deleteToDo(dataSource.get(0));
+                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+                    ToDo first = database.getFirstTodo();
+                    if(first != null){
+                        database.deleteToDo(first);
                         refreshListView();
                     }
 
@@ -114,11 +110,12 @@ public class MainActivity extends AppCompatActivity
             updateFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    if(dataSource.size() > 0){
-                        TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+                    ToDo first = database.getFirstTodo();
+                    if(first != null){
                         Random r = new Random();
-                        dataSource.get(0).setName(String.valueOf(r.nextInt()));
-                        database.updateToDo(dataSource.get(0));
+                        first.setName(String.valueOf(r.nextInt()));
+                        database.updateToDo(first);
                         refreshListView();
 
 
@@ -159,9 +156,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void refreshListView(){
-        dataSource.clear();
-        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
-        adapter.notifyDataSetChanged();
+        adapter.changeCursor(TodoDatabase.getInstance(this).getAllTodosAsCursor());
 
     }
     @Override
