@@ -90,7 +90,7 @@ public class TodoDatabase extends SQLiteOpenHelper {
 
             Calendar calendar = null;
 
-            if(cursor.isNull(cursor.getColumnIndex(DUEDATE_COLUMN))){
+            if(!cursor.isNull(cursor.getColumnIndex(DUEDATE_COLUMN))){
                 calendar = calendar.getInstance();
                 calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(DUEDATE_COLUMN)) * 1000);
             }

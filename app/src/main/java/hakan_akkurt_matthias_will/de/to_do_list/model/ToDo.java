@@ -1,12 +1,13 @@
 package hakan_akkurt_matthias_will.de.to_do_list.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Created by Hakan Akkurt on 13.01.2017.
  */
 
-public class ToDo {
+public class ToDo implements Serializable {
     private long id;
     private String name;
     private Calendar dueDate;

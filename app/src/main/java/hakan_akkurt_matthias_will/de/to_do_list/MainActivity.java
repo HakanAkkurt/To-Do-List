@@ -1,5 +1,6 @@
 package hakan_akkurt_matthias_will.de.to_do_list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,12 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -27,13 +27,12 @@ import hakan_akkurt_matthias_will.de.to_do_list.adapter.listview.ToDoOverviewLis
 import hakan_akkurt_matthias_will.de.to_do_list.database.TodoDatabase;
 import hakan_akkurt_matthias_will.de.to_do_list.model.ToDo;
 
-import static hakan_akkurt_matthias_will.de.to_do_list.R.id.todos;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView listView;
     private ToDoOverviewListAdapter adapter;
+    private List<ToDo> dataSource;
 
 
     @Override
@@ -50,16 +49,25 @@ public class MainActivity extends AppCompatActivity
         Button clearAll = (Button) findViewById(R.id.clearAll);
         Button clearFirst = (Button) findViewById(R.id.clearFirst);
         Button updateFirst = (Button) findViewById(R.id.updateFirst);
+        Button sort = (Button) findViewById(R.id.sort);
 
+        this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
 
-
-        this.adapter = new ToDoOverviewListAdapter(this, TodoDatabase.getInstance(this).getAllTodosAsCursor());
+        this.adapter = new ToDoOverviewListAdapter(this, dataSource);
         this.listView.setAdapter(adapter);
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, final View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> adapterView, final View view, int position, long id) {
                 Object element = adapterView.getAdapter().getItem(position);
 
+                if(element instanceof ToDo){
+                    ToDo todo = (ToDo) element;
+
+                    Intent intent = new Intent(MainActivity.this, ToDoDetailActivity.class);
+                    intent.putExtra(ToDoDetailActivity.TODO_ID_KEY, todo.getId());
+
+                    startActivity(intent);
+                }
                 Log.e("ClickOnList", element.toString());
 
             }
@@ -71,8 +79,31 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(final View view) {
                     TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
 
-                    database.createToDO(new ToDo("Einkaufen"));
-                    database.createToDO(new ToDo("was geht?", Calendar.getInstance()));
+                    ToDo todo1 = new ToDo("X");
+                    Calendar c1 = Calendar.getInstance();
+                    c1.set(2016, 8, 30);
+                    todo1.setDueDate(c1);
+
+                    ToDo todo2 = new ToDo("C");
+                    ToDo todo3 = new ToDo("A");
+
+                    Calendar c2 = Calendar.getInstance();
+                    c2.set(2016, 8, 14);
+                    todo3.setDueDate(c2);
+
+                    ToDo todo4 = new ToDo("B");
+
+                    ToDo todo5 = new ToDo("H");
+                    Calendar c3 = Calendar.getInstance();
+                    c3.set(2016, 8, 30);
+                    todo5.setDueDate(c3);
+
+                    database.createToDO(todo1);
+                    database.createToDO(todo2);
+                    database.createToDO(todo3);
+                    database.createToDO(todo4);
+                    database.createToDO(todo5);
+
 
                     refreshListView();
 
@@ -95,10 +126,10 @@ public class MainActivity extends AppCompatActivity
             clearFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
-                    ToDo first = database.getFirstTodo();
-                    if(first != null){
-                        database.deleteToDo(first);
+
+                    if(dataSource.size() > 0){
+                        TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+                        database.deleteToDo(dataSource.get(0));
                         refreshListView();
                     }
 
@@ -111,11 +142,10 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(final View view) {
                     TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
-                    ToDo first = database.getFirstTodo();
-                    if(first != null){
+                    if(dataSource.size() > 0){
                         Random r = new Random();
-                        first.setName(String.valueOf(r.nextInt()));
-                        database.updateToDo(first);
+                        dataSource.get(0).setName(String.valueOf(r.nextInt()));
+                        database.updateToDo(dataSource.get(0));
                         refreshListView();
 
 
@@ -125,6 +155,33 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
+        if(sort != null){
+            sort.setOnClickListener(new View.OnClickListener() {
+              @Override
+                public void onClick(final View view){
+                  adapter.sort(new Comparator<ToDo>() {
+                      @Override
+                      public int compare(final ToDo toDo1, final ToDo todo2) {
+
+                          if(toDo1.getDueDate() != null && todo2.getDueDate() !=null){
+                              long date = (toDo1.getDueDate().getTimeInMillis() / 1000) - (todo2.getDueDate().getTimeInMillis() /1000);
+                              if(date != 0){
+                                  return (int)date;
+                              }
+
+
+                          }else if(toDo1.getDueDate() != null){
+                              return -1;
+                          }else if(todo2.getDueDate() != null){
+                              return 1;
+                          }
+                          return toDo1.getName().compareToIgnoreCase(todo2.getName());
+                      }
+                  });
+
+              }
+            });
+        }
 
 
 
@@ -156,7 +213,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void refreshListView(){
-        adapter.changeCursor(TodoDatabase.getInstance(this).getAllTodosAsCursor());
+        /*adapter.changeCursor(TodoDatabase.getInstance(this).getAllTodosAsCursor());*/
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
+        adapter.notifyDataSetChanged();
 
     }
     @Override

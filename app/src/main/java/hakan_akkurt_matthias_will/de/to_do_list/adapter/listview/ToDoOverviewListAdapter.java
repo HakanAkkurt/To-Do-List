@@ -21,6 +21,7 @@ import hakan_akkurt_matthias_will.de.to_do_list.model.ToDo;
  * Created by Hakan Akkurt on 13.01.2017.
  */
 
+/*
 public class ToDoOverviewListAdapter extends CursorAdapter {
 
     public ToDoOverviewListAdapter(final  Context context, final Cursor cursor){
@@ -49,8 +50,9 @@ public class ToDoOverviewListAdapter extends CursorAdapter {
         }
     }
 
-    /*
-    public ToDoOverviewListAdapter(Context context, List<ToDo> objects) {
+    */
+public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo>{
+    public  ToDoOverviewListAdapter(final Context context, final List<ToDo> objects) {
         super(context, 0, objects);
     }
 
@@ -77,5 +79,6 @@ public class ToDoOverviewListAdapter extends CursorAdapter {
         }
 
         return view;
-    }*/
+    }
+
 }
