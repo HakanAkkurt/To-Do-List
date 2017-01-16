@@ -80,29 +80,15 @@ public class MainActivity extends AppCompatActivity
                     TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
 
                     ToDo todo1 = new ToDo("X");
-                    Calendar c1 = Calendar.getInstance();
-                    c1.set(2016, 8, 30);
-                    todo1.setDueDate(c1);
+                    todo1.setFavorite(true);
+                    todo1.setDueDate(Calendar.getInstance());
 
                     ToDo todo2 = new ToDo("C");
-                    ToDo todo3 = new ToDo("A");
-
-                    Calendar c2 = Calendar.getInstance();
-                    c2.set(2016, 8, 14);
-                    todo3.setDueDate(c2);
-
-                    ToDo todo4 = new ToDo("B");
-
-                    ToDo todo5 = new ToDo("H");
-                    Calendar c3 = Calendar.getInstance();
-                    c3.set(2016, 8, 30);
-                    todo5.setDueDate(c3);
+                    todo2.setDescription("Beschreibung");
 
                     database.createToDO(todo1);
                     database.createToDO(todo2);
-                    database.createToDO(todo3);
-                    database.createToDO(todo4);
-                    database.createToDO(todo5);
+
 
 
                     refreshListView();

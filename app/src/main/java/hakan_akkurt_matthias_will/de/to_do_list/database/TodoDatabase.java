@@ -20,12 +20,14 @@ public class TodoDatabase extends SQLiteOpenHelper {
     public static TodoDatabase INSTANCE = null;
 
     private static final String DB_NAME = "TODOS";
-    private static final int VERSION = 1;
+    private static final int VERSION = 5;
     private static final String TABLE_NAME = "todos";
 
     public static final String ID_COLUMN = "ID";
     public static final String NAME_COLUMN = "name";
     public static final String DUEDATE_COLUMN = "dueDate";
+    public static final String FAVORITE_COLUMN = "favorite";
+    public static final String DESCRIPTION_COLUMN ="description";
 
 
 
@@ -44,7 +46,8 @@ public class TodoDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
         String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                + NAME_COLUMN + " TEXT NOT NULL, " + DUEDATE_COLUMN + " INTEGER DEFAULT NULL)";
+                + NAME_COLUMN + " TEXT NOT NULL, " + DUEDATE_COLUMN + " INTEGER DEFAULT NULL, "
+                + FAVORITE_COLUMN + " INTEGER DEFAULT 0, " + DESCRIPTION_COLUMN + " TEXT DEFAULT NULL)";
 
         sqLiteDatabase.execSQL(createQuery);
 
@@ -66,6 +69,8 @@ public class TodoDatabase extends SQLiteOpenHelper {
         ContentValues values =new ContentValues();
         values.put(NAME_COLUMN, todo.getName());
         values.put(DUEDATE_COLUMN, todo.getDueDate() == null ? null : todo.getDueDate().getTimeInMillis() / 1000);
+        values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
+        values.put(DESCRIPTION_COLUMN, todo.getDescription());
 
         long newID = database.insert(TABLE_NAME, null, values);
 
@@ -79,7 +84,7 @@ public class TodoDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.query
-        (TABLE_NAME, new String[]{ID_COLUMN, NAME_COLUMN, DUEDATE_COLUMN}, ID_COLUMN + " = ?",
+        (TABLE_NAME, new String[]{ID_COLUMN, NAME_COLUMN, DUEDATE_COLUMN, FAVORITE_COLUMN, DESCRIPTION_COLUMN}, ID_COLUMN + " = ?",
                 new String[]{String.valueOf(id)}, null, null, null);
 
         ToDo todo = null;
@@ -94,6 +99,8 @@ public class TodoDatabase extends SQLiteOpenHelper {
                 calendar = calendar.getInstance();
                 calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(DUEDATE_COLUMN)) * 1000);
             }
+
+            todo.setFavorite(cursor.getInt(cursor.getColumnIndex(FAVORITE_COLUMN)) == 1);
 
             todo.setDueDate(calendar);
         }
@@ -128,6 +135,7 @@ public class TodoDatabase extends SQLiteOpenHelper {
 
         values.put(NAME_COLUMN, todo.getName());
         values.put(DUEDATE_COLUMN, todo.getDueDate() == null ? null : todo.getDueDate().getTimeInMillis() / 1000);
+        values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
 
         database.update(TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{String.valueOf(todo.getId())});
 

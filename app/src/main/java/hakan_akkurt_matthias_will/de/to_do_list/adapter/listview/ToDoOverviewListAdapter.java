@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -70,12 +71,20 @@ public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo>{
         ((TextView) view.findViewById(R.id.name)).setText(currentToDo.getName());
 
         TextView dueDate = (TextView) view.findViewById(R.id.dueDate);
+        ImageView favorite = (ImageView) view.findViewById(R.id.favorite_icon);
 
         if(currentToDo.getDueDate()== null){
             dueDate.setVisibility(View.GONE);
         }else{
             dueDate.setVisibility(View.VISIBLE);
             dueDate.setText(String.valueOf(currentToDo.getDueDate().get(Calendar.YEAR)));
+        }
+
+        if(currentToDo.isFavorite()){
+            favorite.setVisibility(View.VISIBLE);
+            favorite.setImageResource(R.mipmap.ic_star);
+        }else{
+            favorite.setVisibility(View.INVISIBLE);
         }
 
         return view;
