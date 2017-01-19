@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,20 +16,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 import hakan_akkurt_matthias_will.de.to_do_list.adapter.listview.ToDoOverviewListAdapter;
 import hakan_akkurt_matthias_will.de.to_do_list.database.TodoDatabase;
+import hakan_akkurt_matthias_will.de.to_do_list.dialogs.NumberPickerDialogFragment;
+import hakan_akkurt_matthias_will.de.to_do_list.dialogs.listener.OnNumberPicketListener;
 import hakan_akkurt_matthias_will.de.to_do_list.model.ToDo;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnNumberPicketListener {
 
     private ListView listView;
     private ToDoOverviewListAdapter adapter;
@@ -40,16 +40,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         //eigene Codes
 
 
         this.listView = (ListView) findViewById(R.id.todos);
 
-        Button create = (Button) findViewById(R.id.create);
-        Button clearAll = (Button) findViewById(R.id.clearAll);
-        Button clearFirst = (Button) findViewById(R.id.clearFirst);
-        Button updateFirst = (Button) findViewById(R.id.updateFirst);
-        Button sort = (Button) findViewById(R.id.sort);
+
 
         this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
 
@@ -73,74 +70,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if(create != null){
-            create.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
-
-                    ToDo todo1 = new ToDo("X");
-                    todo1.setFavorite(true);
-                    todo1.setDueDate(Calendar.getInstance());
-
-                    ToDo todo2 = new ToDo("C");
-                    todo2.setDescription("Beschreibung");
-
-                    database.createToDO(todo1);
-                    database.createToDO(todo2);
-
-
-
-                    refreshListView();
-
-                }
-            });
-        }
-
-        if(clearAll != null){
-            clearAll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
-                    database.deleteAllToDos();
-                    refreshListView();
-                }
-            });
-        }
-
-        if(clearFirst != null){
-            clearFirst.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-
-                    if(dataSource.size() > 0){
-                        TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
-                        database.deleteToDo(dataSource.get(0));
-                        refreshListView();
-                    }
-
-                }
-            });
-        }
-
-        if(updateFirst != null){
-            updateFirst.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
-                    if(dataSource.size() > 0){
-                        Random r = new Random();
-                        dataSource.get(0).setName(String.valueOf(r.nextInt()));
-                        database.updateToDo(dataSource.get(0));
-                        refreshListView();
-
-
-                    }
-
-                }
-            });
-        }
-
+        /*
         if(sort != null){
             sort.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -167,10 +97,7 @@ public class MainActivity extends AppCompatActivity
 
               }
             });
-        }
-
-
-
+        }*/
 
         //bis hier
 
@@ -198,13 +125,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void refreshListView(){
-        /*adapter.changeCursor(TodoDatabase.getInstance(this).getAllTodosAsCursor());*/
-        dataSource.clear();
-        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
-        adapter.notifyDataSetChanged();
 
-    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -215,27 +136,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -263,4 +164,57 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onNumberPicket(final boolean numberPicked, final int number, final NumberPickerDialogFragment dialogFragment) {
+        if (numberPicked) {
+            Toast.makeText(this, "neue nummer: " + number, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "abbruch", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshListView();
+    }
+
+    private void refreshListView() {
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_clear_all:
+                this.clearAll();
+                return true;
+            case R.id.menu_new_todo:
+                this.newTodo();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void clearAll() {
+        TodoDatabase database = TodoDatabase.getInstance(MainActivity.this);
+        database.deleteAllToDos();
+        refreshListView();
+    }
+
+    public void newTodo(){
+        Intent i = new Intent(MainActivity.this, CreateNewToDoActivity.class);
+        startActivity(i);
+    }
 }

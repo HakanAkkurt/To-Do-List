@@ -1,5 +1,7 @@
 package hakan_akkurt_matthias_will.de.to_do_list.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -12,24 +14,30 @@ public class ToDo implements Serializable {
     private String name;
     private Calendar dueDate;
     private boolean favorite;
-    private String description;
+    private String   description;
+    private LatLng location;
 
-    public ToDo(final String name) {
-        this(name, null, false, null);
+    public ToDo() {
+        this(null, null, false, null, null);
     }
 
-    public ToDo(final String name, final Calendar dueDate, final boolean favorite, final String description) {
+    public ToDo(final String name) {
+        this(name, null, false, null, null);
+    }
+
+    public ToDo(final String name, final Calendar dueDate, final boolean favorite, final String description, final LatLng location) {
         this.name = name;
         this.dueDate = dueDate;
         this.favorite = favorite;
         this.description = description;
+        this.location = location;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -37,7 +45,7 @@ public class ToDo implements Serializable {
         return dueDate;
     }
 
-    public void setDueDate(Calendar dueDate) {
+    public void setDueDate(final Calendar dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -45,7 +53,7 @@ public class ToDo implements Serializable {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -53,7 +61,7 @@ public class ToDo implements Serializable {
         return favorite;
     }
 
-    public void setFavorite(boolean favorite) {
+    public void setFavorite(final boolean favorite) {
         this.favorite = favorite;
     }
 
@@ -61,7 +69,16 @@ public class ToDo implements Serializable {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(final LatLng location) {
+        this.location = location;
+    }
 }
+
