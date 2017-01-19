@@ -11,79 +11,91 @@
     tools:context="hakan_akkurt_matthias_will.de.to_do_list.ToDoDetailActivity">
 
     <TextView
-        android:text="Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Name"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/name"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Duedate"
+        android:id="@+id/Duedate"
+        android:layout_below="@+id/name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/dueDateText"
+        android:layout_below="@+id/Duedate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorite"
+        android:id="@+id/favorite"
+        android:layout_below="@+id/dueDateText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:checked="false"
+        android:enabled="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Descriptione"
+        android:id="@+id/textView5"
+        android:layout_below="@+id/favorite"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/description"
+        android:layout_below="@+id/textView5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="25dp"/>
 
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_below="@+id/description"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="19dp"
         android:id="@+id/map"
+        android:layout_below="@+id/description"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/description"
-        android:textSize="18sp"
-        android:layout_below="@+id/textView5"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:textSize="18sp"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dueDate"
-        android:textSize="18sp"
-        android:layout_marginTop="54dp"
-        android:layout_below="@+id/name"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="DueDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Duedate"
-        android:textSize="10sp"
-        android:layout_below="@+id/name"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="19dp" />
-
-    <TextView
-        android:text="Descriptione"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView5"
-        android:textSize="10sp"
-        android:layout_below="@+id/favorite"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
-
-    <CheckBox
-        android:text="Favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:id="@+id/favorite"
-        android:enabled="false"
-        android:layout_below="@+id/dueDate"
-        android:layout_alignParentStart="true" />
 </RelativeLayout>
