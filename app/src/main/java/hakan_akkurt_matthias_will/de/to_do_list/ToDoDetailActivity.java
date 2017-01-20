@@ -1,8 +1,13 @@
 package hakan_akkurt_matthias_will.de.to_do_list;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -26,6 +31,8 @@ public class ToDoDetailActivity extends AppCompatActivity implements OnMapReadyC
     private TextView dueDate;
     private TextView description;
     private CheckBox favorite;
+    private Button update;
+
 
     private ToDo todo;
 
@@ -41,6 +48,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements OnMapReadyC
         dueDate = (TextView) findViewById(R.id.dueDateText);
         description = (TextView) findViewById(R.id.description);
         favorite = (CheckBox) findViewById(R.id.favorite);
+        update = (Button) findViewById(R.id.update);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -54,6 +62,22 @@ public class ToDoDetailActivity extends AppCompatActivity implements OnMapReadyC
         Log.e("todo", todo.toString());
         Log.e("todo id", String.valueOf(todo.getId()));
         Log.e("todo name", todo.getName());
+
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        this.update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+
+                TodoDatabase.getInstance(ToDoDetailActivity.this).updateToDo(todo);
+
+            }
+        }); //Tut sich irgendwie noch nichts....
+
+
     }
 
     private String getDateInString(Calendar calendar) {
@@ -69,6 +93,12 @@ public class ToDoDetailActivity extends AppCompatActivity implements OnMapReadyC
             googleMap.addMarker(new MarkerOptions().position(todo.getLocation()));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(todo.getLocation(), 15));
         }
+
+    }
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
 
     }
 }

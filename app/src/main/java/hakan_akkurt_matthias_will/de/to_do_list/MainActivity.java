@@ -1,9 +1,11 @@
 package hakan_akkurt_matthias_will.de.to_do_list;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
@@ -123,6 +125,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
 
@@ -217,4 +221,6 @@ public class MainActivity extends AppCompatActivity
         Intent i = new Intent(MainActivity.this, CreateNewToDoActivity.class);
         startActivity(i);
     }
+
+
 }
