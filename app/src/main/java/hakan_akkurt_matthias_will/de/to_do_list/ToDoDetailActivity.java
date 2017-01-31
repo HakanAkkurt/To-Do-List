@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,9 +28,9 @@ import hakan_akkurt_matthias_will.de.to_do_list.model.ToDo;
 public class ToDoDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final String TODO_ID_KEY = "TODO";
 
-    private TextView name;
-    private TextView dueDate;
-    private TextView description;
+    private EditText name;
+    private EditText dueDate;
+    private EditText description;
     private CheckBox favorite;
     private Button update;
 
@@ -44,9 +45,9 @@ public class ToDoDetailActivity extends AppCompatActivity implements OnMapReadyC
         long id = getIntent().getLongExtra(TODO_ID_KEY, 0);
         this.todo = TodoDatabase.getInstance(this).readToDo(id);
 
-        name = (TextView) findViewById(R.id.name);
-        dueDate = (TextView) findViewById(R.id.dueDateText);
-        description = (TextView) findViewById(R.id.description);
+        name = (EditText) findViewById(R.id.name);
+        dueDate = (EditText) findViewById(R.id.dueDateText);
+        description = (EditText) findViewById(R.id.description);
         favorite = (CheckBox) findViewById(R.id.favorite);
         update = (Button) findViewById(R.id.update);
 
@@ -56,7 +57,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements OnMapReadyC
         name.setText(todo.getName());
         dueDate.setText(todo.getDueDate() == null ? "-" : getDateInString(todo.getDueDate()));
         description.setText(todo.getDescription() == null ? "no description" : todo.getDescription());
-
         favorite.setChecked(todo.isFavorite());
 
         Log.e("todo", todo.toString());
